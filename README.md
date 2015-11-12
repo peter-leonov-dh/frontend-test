@@ -24,7 +24,7 @@ Requirements
 - You MUST use a CSS preprocessor language like Sass or Less as long as you deliver the compiled CSS as well as the Sass/Less source code.
 - You MUST NOT write any server side code. Only client side code is under appreciation.
 - You SHOULD write your own test suite (eg. Jasmine/QUnit) for a particular component that you’ve written.
-- You MUST automate all these processes with a task running utility (eg. Gulp)
+- You MUST automate all these processes with a task running utility (eg. Gulp) preferred is a self-written solution.
 
 Exercise
 --------
