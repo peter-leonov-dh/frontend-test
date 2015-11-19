@@ -2,9 +2,17 @@ HelloFresh Dev Team - Frontend Developer Test
 =======================================================
 
 The goal of this test is to assert your coding skills (to some degree).
-Feel more than free to add any particular technique or algorithm at any point, which you think might enrich the overall quality of the end result.
-We expect you to be able to solve this test in a 2-4 hour time span.
-When you're finished, reply within the existing mail conversation that you have with jobs@hellofresh.de by attaching a zip file with your results.
+Feel more than free to add any particular technique or algorithm at any point, which you think might enrich the overall quality of the end result. We expect you to be able to solve this test in a 2-4 hour time span.
+
+Instructions
+------------
+
+- Clone this repo.
+- Create a new `dev` branch.
+- Do a Pull Request from `dev` to `master`, more on that right below.
+- Reply to the thread your having with our HR department telling us we can start reviewing your code.
+
+When you're finished, please do a pull request to `master` and make sure to write about your approach in the description. One or more of our engineers will then perform a code review. We will ask questions which we expect you to be able to answer. Code review is an important part of our process; this gives you as well as us a better understanding of how working together might be like.
 
 Requirements
 ------------
@@ -16,7 +24,7 @@ Requirements
 - You MUST use a CSS preprocessor language like Sass or Less as long as you deliver the compiled CSS as well as the Sass/Less source code.
 - You MUST NOT write any server side code. Only client side code is under appreciation.
 - You SHOULD write your own test suite (eg. Jasmine/QUnit) for a particular component that you’ve written.
-- You MUST automate all these processes with a task running utility (eg. Gulp)
+- You MUST automate all these processes with a task running utility (eg. Gulp) preferred is a self-written solution.
 
 Exercise
 --------
