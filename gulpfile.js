@@ -3,6 +3,7 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
+var webserver = require('gulp-webserver');
 
 
 var css = {
@@ -31,10 +32,9 @@ gulp.task('js', function(){
 });
 
 
-gulp.task('watch', function(){
-  // add production build as a second task for heavy lifting stuff
+gulp.task('default', function(){
   gulp.watch(js.watch, ['js']);
   gulp.watch(css.watch, ['css']);
-});
 
-gulp.task('default', ['watch']);
+  gulp.src('public').pipe(webserver({open: true}));
+});
