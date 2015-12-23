@@ -1,0 +1,25 @@
+@import 'reset';
+
+.Layout
+{
+  &-content {
+    width: 960px; // 2 * 3 * 5 * 32
+    margin: 0 auto;
+  }
+}
+
+.Recipe
+{
+  margin: 25px;
+
+  &-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  &-headline {
+    display: block;
+    font-weight: normal;
+    font-size: 0.75em;
+  }
+}
