@@ -3,6 +3,15 @@
 // React.js, best parts ;)
 function E (tag, props) {
   var node = document.createElement(tag)
+
+  var style = props.style
+  if (style)
+  {
+    delete props.style
+    for (var k in style)
+      node.style[k] = style[k]
+  }
+
   for (var k in props)
     node[k] = props[k]
 
@@ -46,10 +55,13 @@ RecipeList.prototype =
     // pretending React is not yet invented ;)
     this.state.recipes.forEach(function (recipe)
     {
+      console.log(recipe.image)
       root.appendChild(
-        E('li', {className: 'Recipe'},
+        E('li', {className: 'Recipe', style: {backgroundImage: 'url('+recipe.image+')'}},
           E('h2', {className: 'Recipe-title'},
-            recipe.name,
+            E('span', {className: 'Recipe-name'},
+              recipe.name
+            ),
             E('span', {className: 'Recipe-headline'},
               recipe.headline
             )
