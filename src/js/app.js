@@ -1,5 +1,44 @@
 !function(){
 
+var RecipeService =
+{
+  // dump EventEmitter replacement
+  onchange: function () { /*noop*/ },
+
+  recipes: [],
+
+  set: function (recipes)
+  {
+    this.recipes = recipes
+    this.onchange(this.recipes)
+  },
+
+  incrementRecipeFavoritesCount: function (id)
+  {
+    // send AJAX request here
+    this.recipes
+      .filter(function (recipe) {
+        return recipe.id == id
+      })
+      .forEach(function (recipe) {
+        recipe.favorites++
+      })
+
+    this.onchange(this.recipes)
+  }
+}
+
+var Actions =
+{
+  favorite: function (id)
+  {
+    return function ()
+    {
+      RecipeService.incrementRecipeFavoritesCount(id)
+    }
+  }
+}
+
 // React.js, best parts ;)
 function E (tag, props) {
   var node = document.createElement(tag)
@@ -30,32 +69,19 @@ function E (tag, props) {
 // class RecipeList
 function RecipeList (root)
 {
-  this.nodes = {
-    root: root
-  }
-
-  this.state = {
-    recipes: []
-  }
+  this.root = root
 }
 
 RecipeList.prototype =
 {
-  setRecipes: function (recipes)
+  render: function (recipes)
   {
-    this.state.recipes = recipes
-    this.render()
-  },
-
-  render: function ()
-  {
-    var root = this.nodes.root
+    var root = this.root
     // empty root first
     root.innerHTML = ''
     // pretending React is not yet invented ;)
-    this.state.recipes.forEach(function (recipe)
+    recipes.forEach(function (recipe)
     {
-      console.log(recipe.image)
       root.appendChild(
         E('li', {className: 'Recipe', style: {backgroundImage: 'url('+recipe.image+')'}},
           E('h2', {className: 'Recipe-title'},
@@ -65,6 +91,9 @@ RecipeList.prototype =
             E('span', {className: 'Recipe-headline'},
               recipe.headline
             )
+          ),
+          E('a', {className: 'Recipe-favorites', onclick: Actions.favorite(recipe.id)},
+            recipe.favorites + '★'
           )
         )
       )
@@ -72,14 +101,22 @@ RecipeList.prototype =
   }
 }
 
+function app ()
+{
+  var recipeList = new RecipeList(document.querySelector('.RecipeList'))
+  RecipeService.onchange = function (recipes)
+  {
+    recipeList.render(recipes)
+  }
 
-window.fetch('/db/recipes.json')
-.then(function(response) {
-  return response.json()
-})
-.then(function(json) {
-  new RecipeList(document.querySelector('.RecipeList')).setRecipes(json)
-})
-
+  window.fetch('/db/recipes.json')
+  .then(function(response) {
+    return response.json()
+  })
+  .then(function(recipes) {
+    RecipeService.set(recipes)
+  })
+}
+app()
 
 }();
