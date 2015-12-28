@@ -3,7 +3,9 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
+var browserify = require('browserify');
 var webserver = require('gulp-webserver');
+var source = require('vinyl-source-stream');
 
 
 var css = {
@@ -22,13 +24,17 @@ gulp.task('css', function(){
 
 var js = {
   watch: ['src/js/*.js', 'src/js/**/*.js'],
-  dst: 'public/js',
-  min: 'app.js'
+  in: ['src/js/app.js'],
+  out: 'app.js',
+  dst: 'public/js'
 }
 gulp.task('js', function(){
-  gulp.src(js.watch)
-    .pipe(concat(js.min))
-    .pipe(gulp.dest(js.dst));
+  browserify({
+    entries: js.in
+  })
+  .bundle()
+  .pipe(source(js.out))
+  .pipe(gulp.dest(js.dst));
 });
 
 

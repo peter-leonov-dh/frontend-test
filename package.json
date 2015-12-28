@@ -17,9 +17,12 @@
   },
   "homepage": "https://github.com/hellofresh/peter-leonov-frontend-test#readme",
   "devDependencies": {
+    "browserify": "^12.0.1",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-sass": "^2.1.1",
-    "gulp-webserver": "^0.9.1"
+    "gulp-streamify": "^1.0.2",
+    "gulp-webserver": "^0.9.1",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
