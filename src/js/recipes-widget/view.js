@@ -6,19 +6,17 @@ module.exports = function renderRecipeList (recipes, actions)
   // pretending React is not yet invented ;)
   return E('ul', {className: 'RecipeList'},
     recipes.map(function (recipe) {
-      return E('ul', {className: 'RecipeList'},
-        E('li', {className: 'Recipe', style: {backgroundImage: 'url('+recipe.image+')'}},
-          E('h2', {className: 'Recipe-title'},
-            E('span', {className: 'Recipe-name'},
-              recipe.name
-            ),
-            E('span', {className: 'Recipe-headline'},
-              recipe.headline
-            )
+      return E('li', {className: 'Recipe', style: {backgroundImage: 'url('+recipe.image+')'}},
+        E('h2', {className: 'Recipe-title'},
+          E('span', {className: 'Recipe-name'},
+            recipe.name
           ),
-          E('a', {className: 'Recipe-favorites', onclick: actions.favorite(recipe.id)},
-            recipe.favorites + '★'
+          E('span', {className: 'Recipe-headline'},
+            recipe.headline
           )
+        ),
+        E('a', {className: 'Recipe-favorites', onclick: actions.favorite(recipe.id)},
+          recipe.favorites + '★'
         )
       )
     })
