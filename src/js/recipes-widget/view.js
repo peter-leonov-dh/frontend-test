@@ -1,24 +1,12 @@
 var E = require('../lib/e')
 
 // class RecipeList
-function RecipeList (root, actions)
+module.exports = function renderRecipeList (recipes, actions)
 {
-  this.root = root
-  this.actions = actions
-}
-
-RecipeList.prototype =
-{
-  render: function (recipes)
-  {
-    var actions = this.actions
-    var root = this.root
-    // empty root first
-    root.innerHTML = ''
-    // pretending React is not yet invented ;)
-    recipes.forEach(function (recipe)
-    {
-      root.appendChild(
+  // pretending React is not yet invented ;)
+  return E('ul', {className: 'RecipeList'},
+    recipes.map(function (recipe) {
+      return E('ul', {className: 'RecipeList'},
         E('li', {className: 'Recipe', style: {backgroundImage: 'url('+recipe.image+')'}},
           E('h2', {className: 'Recipe-title'},
             E('span', {className: 'Recipe-name'},
@@ -34,10 +22,5 @@ RecipeList.prototype =
         )
       )
     })
-  }
-}
-
-module.exports = function (root, actions)
-{
-  return new RecipeList(root, actions)
+  )
 }

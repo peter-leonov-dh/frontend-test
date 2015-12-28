@@ -5,11 +5,13 @@ function RecipesWidget (root, fetch)
   // kinda Controller
   var actions = require('./actions')(recipeService)
   // definitely View
-  var view = require('./view')(root, actions)
+  var renderRecipeList = require('./view')
 
   recipeService.onchange = function (recipes)
   {
-    view.render(recipes)
+    // should be done by the uppermost widget
+    root.innerHTML = ''
+    root.appendChild(renderRecipeList(recipes, actions))
   }
 
   fetch('/db/recipes.json')
