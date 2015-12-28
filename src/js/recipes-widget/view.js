@@ -1,4 +1,4 @@
-var E = require('./e')
+var E = require('../lib/e')
 
 // class RecipeList
 function RecipeList (root, actions)

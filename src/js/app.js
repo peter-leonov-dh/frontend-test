@@ -1,4 +1,5 @@
 // jQuery, best parts
-function $ (s) { return document.querySelector(s) }
+var $ = require('./lib/query')
+var fetch = require('./lib/fetch')
 
-var recipesWidget = require('./recipes-widget')($('.RecipeList'), window.fetch)
+var recipesWidget = require('./recipes-widget/widget')($('.RecipeList'), fetch)

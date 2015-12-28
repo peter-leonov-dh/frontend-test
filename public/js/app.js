@@ -1,24 +1,11 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-// needs DSL like in ReFLUX
-module.exports = function (recipeService)
-{
-  return {
-    favorite: function (id) {
-      return function ()
-      {
-        recipeService.incrementRecipeFavoritesCount(id)
-      }
-    }
-  }
-}
-
-},{}],2:[function(require,module,exports){
 // jQuery, best parts
-function $ (s) { return document.querySelector(s) }
+var $ = require('./lib/query')
+var fetch = require('./lib/fetch')
 
-var recipesWidget = require('./recipes-widget')($('.RecipeList'), window.fetch)
+var recipesWidget = require('./recipes-widget/widget')($('.RecipeList'), fetch)
 
-},{"./recipes-widget":6}],3:[function(require,module,exports){
+},{"./lib/fetch":3,"./lib/query":4,"./recipes-widget/widget":8}],2:[function(require,module,exports){
 // React.js, best parts ;)
 function E (tag, props) {
   var node = document.createElement(tag)
@@ -47,8 +34,63 @@ function E (tag, props) {
 
 module.exports = E
 
+},{}],3:[function(require,module,exports){
+// XMLHTTPRequest, the best part
+module.exports = window.fetch
+
 },{}],4:[function(require,module,exports){
-var E = require('./e')
+// jQuery, best parts
+module.exports = function $ (s) { return document.querySelector(s) }
+
+},{}],5:[function(require,module,exports){
+// needs DSL like in ReFLUX
+module.exports = function (recipeService)
+{
+  return {
+    favorite: function (id) {
+      return function ()
+      {
+        recipeService.incrementRecipeFavoritesCount(id)
+      }
+    }
+  }
+}
+
+},{}],6:[function(require,module,exports){
+function RecipeService ()
+{
+  this.recipes = []
+  // dump EventEmitter replacement
+  this.onchange = function () { /*noop*/ }
+}
+
+RecipeService.prototype =
+{
+  set: function (recipes)
+  {
+    this.recipes = recipes
+    this.onchange(this.recipes)
+  },
+
+  incrementRecipeFavoritesCount: function (id)
+  {
+    // send AJAX request here
+    this.recipes
+      .filter(function (recipe) {
+        return recipe.id == id
+      })
+      .forEach(function (recipe) {
+        recipe.favorites++
+      })
+
+    this.onchange(this.recipes)
+  }
+}
+
+module.exports = function () { return new RecipeService() }
+
+},{}],7:[function(require,module,exports){
+var E = require('../lib/e')
 
 // class RecipeList
 function RecipeList (root, actions)
@@ -92,52 +134,19 @@ module.exports = function (root, actions)
   return new RecipeList(root, actions)
 }
 
-},{"./e":3}],5:[function(require,module,exports){
-function RecipeService ()
-{
-  this.recipes = []
-  // dump EventEmitter replacement
-  this.onchange = function () { /*noop*/ }
-}
-
-RecipeService.prototype =
-{
-  set: function (recipes)
-  {
-    this.recipes = recipes
-    this.onchange(this.recipes)
-  },
-
-  incrementRecipeFavoritesCount: function (id)
-  {
-    // send AJAX request here
-    this.recipes
-      .filter(function (recipe) {
-        return recipe.id == id
-      })
-      .forEach(function (recipe) {
-        recipe.favorites++
-      })
-
-    this.onchange(this.recipes)
-  }
-}
-
-module.exports = function () { return new RecipeService() }
-
-},{}],6:[function(require,module,exports){
+},{"../lib/e":2}],8:[function(require,module,exports){
 function RecipesWidget (root, fetch)
 {
   // kinda Model
-  var recipeService = require('./recipe-service')()
+  var recipeService = require('./service')()
   // kinda Controller
   var actions = require('./actions')(recipeService)
   // definitely View
-  var recipeList = require('./recipe-list')(root, actions)
+  var view = require('./view')(root, actions)
 
   recipeService.onchange = function (recipes)
   {
-    recipeList.render(recipes)
+    view.render(recipes)
   }
 
   fetch('/db/recipes.json')
@@ -151,4 +160,4 @@ function RecipesWidget (root, fetch)
 
 module.exports = RecipesWidget
 
-},{"./actions":1,"./recipe-list":4,"./recipe-service":5}]},{},[2]);
+},{"./actions":5,"./service":6,"./view":7}]},{},[1]);

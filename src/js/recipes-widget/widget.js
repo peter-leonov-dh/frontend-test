@@ -1,15 +1,15 @@
 function RecipesWidget (root, fetch)
 {
   // kinda Model
-  var recipeService = require('./recipe-service')()
+  var recipeService = require('./service')()
   // kinda Controller
   var actions = require('./actions')(recipeService)
   // definitely View
-  var recipeList = require('./recipe-list')(root, actions)
+  var view = require('./view')(root, actions)
 
   recipeService.onchange = function (recipes)
   {
-    recipeList.render(recipes)
+    view.render(recipes)
   }
 
   fetch('/db/recipes.json')
