@@ -13,13 +13,29 @@ function E (tag, props) {
   for (var k in props)
     node[k] = props[k]
 
-  for (var i = 2; i < arguments.length; i++)
-  {
-    var child = arguments[i]
-    if (typeof child == 'string')
-      child = document.createTextNode(child)
-    node.appendChild(child)
-  }
+  Array.from(arguments)
+    // shift for positioned args tag and props
+    .slice(2)
+    // flatten (node1, [node2, node3, …], …nodeN) -> node1, node2, node3, … nodeN
+    .reduce(function (ary, arg)
+    {
+      if (Array.isArray(arg))
+        ary = ary.concat(arg)
+      else
+        ary.push(arg)
+      return ary
+    }, [])
+    // map strings to text nodes
+    .map(function (child) {
+      if (typeof child == 'string')
+        return document.createTextNode(child)
+      else
+        return child
+    })
+    // actually append
+    .forEach(function (child) {
+      node.appendChild(child)
+    })
 
   return node
 }
