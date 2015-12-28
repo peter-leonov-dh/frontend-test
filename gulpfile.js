@@ -42,5 +42,5 @@ gulp.task('default', function(){
   gulp.watch(js.watch, ['js']);
   gulp.watch(css.watch, ['css']);
 
-  gulp.src('public').pipe(webserver({open: true}));
+  gulp.src('public').pipe(webserver());
 });
