@@ -3,7 +3,7 @@
 var $ = require('./lib/query')
 var fetch = require('./lib/fetch')
 
-var recipesWidget = require('./recipes-widget/widget')($('.RecipeList'), fetch)
+var recipesWidget = require('./recipes-widget/widget')($('#app'), fetch)
 
 },{"./lib/fetch":3,"./lib/query":4,"./recipes-widget/widget":8}],2:[function(require,module,exports){
 // React.js, best parts ;)
@@ -21,13 +21,29 @@ function E (tag, props) {
   for (var k in props)
     node[k] = props[k]
 
-  for (var i = 2; i < arguments.length; i++)
-  {
-    var child = arguments[i]
-    if (typeof child == 'string')
-      child = document.createTextNode(child)
-    node.appendChild(child)
-  }
+  Array.from(arguments)
+    // shift for positioned args tag and props
+    .slice(2)
+    // flatten (node1, [node2, node3, …], …nodeN) -> node1, node2, node3, … nodeN
+    .reduce(function (ary, arg)
+    {
+      if (Array.isArray(arg))
+        ary = ary.concat(arg)
+      else
+        ary.push(arg)
+      return ary
+    }, [])
+    // map strings to text nodes
+    .map(function (child) {
+      if (typeof child == 'string')
+        return document.createTextNode(child)
+      else
+        return child
+    })
+    // actually append
+    .forEach(function (child) {
+      node.appendChild(child)
+    })
 
   return node
 }
@@ -93,45 +109,26 @@ module.exports = function () { return new RecipeService() }
 var E = require('../lib/e')
 
 // class RecipeList
-function RecipeList (root, actions)
+module.exports = function renderRecipeList (recipes, actions)
 {
-  this.root = root
-  this.actions = actions
-}
-
-RecipeList.prototype =
-{
-  render: function (recipes)
-  {
-    var actions = this.actions
-    var root = this.root
-    // empty root first
-    root.innerHTML = ''
-    // pretending React is not yet invented ;)
-    recipes.forEach(function (recipe)
-    {
-      root.appendChild(
-        E('li', {className: 'Recipe', style: {backgroundImage: 'url('+recipe.image+')'}},
-          E('h2', {className: 'Recipe-title'},
-            E('span', {className: 'Recipe-name'},
-              recipe.name
-            ),
-            E('span', {className: 'Recipe-headline'},
-              recipe.headline
-            )
+  // pretending React is not yet invented ;)
+  return E('ul', {className: 'RecipeList'},
+    recipes.map(function (recipe) {
+      return E('li', {className: 'Recipe', style: {backgroundImage: 'url('+recipe.image+')'}},
+        E('h2', {className: 'Recipe-title'},
+          E('span', {className: 'Recipe-name'},
+            recipe.name
           ),
-          E('a', {className: 'Recipe-favorites', onclick: actions.favorite(recipe.id)},
-            recipe.favorites + '★'
+          E('span', {className: 'Recipe-headline'},
+            recipe.headline
           )
+        ),
+        E('a', {className: 'Recipe-favorites', onclick: actions.favorite(recipe.id)},
+          recipe.favorites + '★'
         )
       )
     })
-  }
-}
-
-module.exports = function (root, actions)
-{
-  return new RecipeList(root, actions)
+  )
 }
 
 },{"../lib/e":2}],8:[function(require,module,exports){
@@ -142,11 +139,13 @@ function RecipesWidget (root, fetch)
   // kinda Controller
   var actions = require('./actions')(recipeService)
   // definitely View
-  var view = require('./view')(root, actions)
+  var renderRecipeList = require('./view')
 
   recipeService.onchange = function (recipes)
   {
-    view.render(recipes)
+    // should be done by the uppermost widget
+    root.innerHTML = ''
+    root.appendChild(renderRecipeList(recipes, actions))
   }
 
   fetch('/db/recipes.json')
