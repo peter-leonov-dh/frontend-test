@@ -1,0 +1,29 @@
+%icon-star {
+  &:after {
+    content: '★';
+  }
+}
+
+.Favorite
+{
+  font-size: 40px;
+  cursor: pointer;
+
+  &-count {
+    margin-right: 5px;
+    vertical-align: middle;
+    color: #ff0;
+  }
+
+  &-sign {
+    @extend %icon-star;
+
+    font-size: 32px;
+    vertical-align: middle;
+    color: #fff;
+
+    &.is-favorite {
+      color: #ff0;
+    }
+  }
+}
