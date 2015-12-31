@@ -1,0 +1,12 @@
+.LoginForm
+{
+  margin: 20px 0;
+  text-align: right;
+  font-size: 20px;
+
+  &-element {
+    &.is-error {
+      outline: 2px solid red;
+    }
+  }
+}
