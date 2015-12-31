@@ -35,7 +35,7 @@ function E (tag, props) {
     }, [])
     // map strings to text nodes
     .map(function (child) {
-      if (typeof child == 'string')
+      if (typeof child == 'string' || typeof child == 'number')
         return document.createTextNode(child)
       else
         return child
@@ -63,10 +63,10 @@ module.exports = function $ (s) { return document.querySelector(s) }
 module.exports = function (recipeService)
 {
   return {
-    favorite: function (id) {
+    favoriteRecipe: function (id) {
       return function ()
       {
-        recipeService.incrementRecipeFavoritesCount(id)
+        recipeService.toggleRecipe(id)
       }
     }
   }
@@ -84,19 +84,30 @@ RecipeService.prototype =
 {
   set: function (recipes)
   {
+    this.favorites = {}
     this.recipes = recipes
     this.onchange(this.recipes)
   },
 
-  incrementRecipeFavoritesCount: function (id)
+  toggleRecipe: function (id)
   {
-    // send AJAX request here
+    // do async stuff here
+
+    if (this.favorites[id]) {
+      var isFavorite = false
+      this.favorites[id] = false
+    } else {
+      var isFavorite = true
+      this.favorites[id] = true
+    }
+
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
       })
       .forEach(function (recipe) {
-        recipe.favorites++
+        recipe.isFavorite = isFavorite
+        recipe.favorites += isFavorite ? 1 : -1
       })
 
     this.onchange(this.recipes)
@@ -123,8 +134,18 @@ module.exports = function renderRecipeList (recipes, actions)
             recipe.headline
           )
         ),
-        E('a', {className: 'Recipe-favorites', onclick: actions.favorite(recipe.id)},
-          recipe.favorites + '★'
+        // I wish React would support Slim…
+        E('div', {className: 'Recipe-favorites Favorite', onclick: actions.favoriteRecipe(recipe.id)},
+          E('span', {className: 'Favorite-count'}, recipe.favorites),
+          E('span', {className: 'Favorite-sign' + (recipe.isFavorite ? ' is-favorite' : '')})
+        ),
+        E('ul', {className: 'Recipe-ingredientList'},
+          recipe.ingredients.map(function (ingredient)
+          {
+            return E('li', {className: 'Recipe-ingredient'},
+              ingredient
+            )
+          })
         )
       )
     })

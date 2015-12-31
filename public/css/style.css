@@ -76,11 +76,7 @@ html {
   .Recipe-favorites {
     position: absolute;
     right: 15px;
-    top: 20px;
-    font-size: 40px;
-    color: #FF0; }
-    .Recipe-favorites:hover {
-      text-decoration: none; }
+    top: 20px; }
   .Recipe-ingredientList {
     padding: 15px 20px;
     font-size: 15px;
@@ -91,3 +87,20 @@ html {
     text-shadow: -1px -1px 0   #fff, -1px  1px 1px #fff, 1px -1px 1px #fff, 1px  1px 0   #fff; }
   .Recipe-ingredient:before {
     content: '• '; }
+
+.Favorite-sign:after {
+  content: '★'; }
+
+.Favorite {
+  font-size: 40px;
+  cursor: pointer; }
+  .Favorite-count {
+    margin-right: 5px;
+    vertical-align: middle;
+    color: #ff0; }
+  .Favorite-sign {
+    font-size: 32px;
+    vertical-align: middle;
+    color: #fff; }
+    .Favorite-sign.is-favorite {
+      color: #ff0; }
