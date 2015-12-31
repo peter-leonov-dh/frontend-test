@@ -9,19 +9,30 @@ RecipeService.prototype =
 {
   set: function (recipes)
   {
+    this.favorites = {}
     this.recipes = recipes
     this.onchange(this.recipes)
   },
 
-  favoriteRecipe: function (id)
+  toggleRecipe: function (id)
   {
-    // send AJAX request here
+    // do async stuff here
+
+    if (this.favorites[id]) {
+      var isFavorite = false
+      this.favorites[id] = false
+    } else {
+      var isFavorite = true
+      this.favorites[id] = true
+    }
+
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
       })
       .forEach(function (recipe) {
-        recipe.favorites++
+        recipe.isFavorite = isFavorite
+        recipe.favorites += isFavorite ? 1 : -1
       })
 
     this.onchange(this.recipes)

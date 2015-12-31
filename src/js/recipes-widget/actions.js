@@ -5,7 +5,7 @@ module.exports = function (recipeService)
     favoriteRecipe: function (id) {
       return function ()
       {
-        recipeService.favoriteRecipe(id)
+        recipeService.toggleRecipe(id)
       }
     }
   }
