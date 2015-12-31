@@ -1,5 +1,6 @@
 function RecipeService ()
 {
+  this.favorites = {}
   this.recipes = []
   // dump EventEmitter replacement
   this.onchange = function () { /*noop*/ }
@@ -9,7 +10,6 @@ RecipeService.prototype =
 {
   set: function (recipes)
   {
-    this.favorites = {}
     this.recipes = recipes
     this.onchange(this.recipes)
   },
