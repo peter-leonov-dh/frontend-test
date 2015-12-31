@@ -5,7 +5,10 @@
   </head>
   <body>
     <body class="Layout-content">
-      <form method="post">
+      <form id="login" class="LoginForm">
+        <input class="LoginForm-element" type="email" data-check="^\S+@\S+\.\S+$" placeholder="your@email.com">
+        <input class="LoginForm-element" type="password" data-check=".{8,}">
+        <button>Sign in!</button>
       </form>
       <div id="app"></div>
     <script src="js/app.js"></script>

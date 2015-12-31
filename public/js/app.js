@@ -5,7 +5,9 @@ var fetch = require('./lib/fetch')
 
 var recipesWidget = require('./recipes-widget/widget')($('#app'), fetch)
 
-},{"./lib/fetch":3,"./lib/query":4,"./recipes-widget/widget":8}],2:[function(require,module,exports){
+var loginFormWidget = require('./login-form-widget/widget')($('#login'))
+
+},{"./lib/fetch":3,"./lib/query":4,"./login-form-widget/widget":5,"./recipes-widget/widget":9}],2:[function(require,module,exports){
 // React.js, best parts ;)
 function E (tag, props) {
   var node = document.createElement(tag)
@@ -59,6 +61,30 @@ module.exports = window.fetch
 module.exports = function $ (s) { return document.querySelector(s) }
 
 },{}],5:[function(require,module,exports){
+function LoginFormWidget (root)
+{
+  function check (e)
+  {
+    e.preventDefault()
+    var form = e.target
+    Array.from(form.elements).forEach(function (element)
+    {
+      var check = element.dataset.check
+      if (!check)
+        return
+      var rex = new RegExp(check)
+      if (!rex.test(element.value))
+        element.classList.add('is-error')
+      else
+        element.classList.remove('is-error')
+    })
+  }
+  root.addEventListener('submit', check, false)
+}
+
+module.exports = LoginFormWidget
+
+},{}],6:[function(require,module,exports){
 // needs DSL like in ReFLUX
 module.exports = function (recipeService)
 {
@@ -72,9 +98,10 @@ module.exports = function (recipeService)
   }
 }
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 function RecipeService ()
 {
+  this.favorites = {}
   this.recipes = []
   // dump EventEmitter replacement
   this.onchange = function () { /*noop*/ }
@@ -84,7 +111,6 @@ RecipeService.prototype =
 {
   set: function (recipes)
   {
-    this.favorites = {}
     this.recipes = recipes
     this.onchange(this.recipes)
   },
@@ -116,7 +142,7 @@ RecipeService.prototype =
 
 module.exports = function () { return new RecipeService() }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var E = require('../lib/e')
 
 // class RecipeList
@@ -152,7 +178,7 @@ module.exports = function renderRecipeList (recipes, actions)
   )
 }
 
-},{"../lib/e":2}],8:[function(require,module,exports){
+},{"../lib/e":2}],9:[function(require,module,exports){
 function RecipesWidget (root, fetch)
 {
   // kinda Model
@@ -180,4 +206,4 @@ function RecipesWidget (root, fetch)
 
 module.exports = RecipesWidget
 
-},{"./actions":5,"./service":6,"./view":7}]},{},[1]);
+},{"./actions":6,"./service":7,"./view":8}]},{},[1]);
