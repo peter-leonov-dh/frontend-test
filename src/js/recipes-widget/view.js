@@ -17,6 +17,14 @@ module.exports = function renderRecipeList (recipes, actions)
         ),
         E('a', {className: 'Recipe-favorites', onclick: actions.favorite(recipe.id)},
           recipe.favorites + '★'
+        ),
+        E('ul', {className: 'Recipe-ingredientList'},
+          recipe.ingredients.map(function (ingredient)
+          {
+            return E('li', {className: 'Recipe-ingredient'},
+              ingredient
+            )
+          })
         )
       )
     })

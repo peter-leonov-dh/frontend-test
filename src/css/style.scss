@@ -7,7 +7,7 @@
   position: relative;
   margin: 25px;
   background-size: cover;
-  height: 300px;
+  min-height: 250px;
   border-radius: 4px;
 
   &-title {
@@ -36,5 +36,21 @@
     color: #FF0;
 
     &:hover { text-decoration: none; }
+  }
+
+  &-ingredientList {
+    padding: 15px 20px;
+    font-size: 15px; font-weight: bold; line-height: 1.5em;
+    color: #222;
+    letter-spacing: 0.5px;
+    text-shadow:
+      -1px -1px 0   #fff,
+      -1px  1px 1px #fff,
+       1px -1px 1px #fff,
+       1px  1px 0   #fff;
+  }
+
+  &-ingredient {
+    &:before { content: '• ' }
   }
 }

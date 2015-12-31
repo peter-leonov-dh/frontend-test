@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body, table,
 h1, h2, h3, h4,
 p, form,
@@ -6,8 +7,10 @@ ol, ul, li, dl, dt, dd {
   margin: 0;
   padding: 0;
   border: 0;
-  font-weight: normal;
   list-style: none; }
+
+dt, dd {
+  font-weight: inherit; }
 
 h1, h2, h3, h4, h5, h6 {
   font: inherit; }
@@ -57,7 +60,7 @@ html {
   position: relative;
   margin: 25px;
   background-size: cover;
-  height: 300px;
+  min-height: 250px;
   border-radius: 4px; }
   .Recipe-title {
     color: #fff;
@@ -78,3 +81,13 @@ html {
     color: #FF0; }
     .Recipe-favorites:hover {
       text-decoration: none; }
+  .Recipe-ingredientList {
+    padding: 15px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.5em;
+    color: #222;
+    letter-spacing: 0.5px;
+    text-shadow: -1px -1px 0   #fff, -1px  1px 1px #fff, 1px -1px 1px #fff, 1px  1px 0   #fff; }
+  .Recipe-ingredient:before {
+    content: '• '; }

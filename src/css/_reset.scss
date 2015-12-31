@@ -2,7 +2,8 @@ body,table,
 h1,h2,h3,h4,
 p,form,
 fieldset,legend,
-ol,ul,li,dl,dt,dd{margin:0;padding:0;border:0;font-weight:normal;list-style:none;}
+ol,ul,li,dl,dt,dd{margin:0;padding:0;border:0;list-style:none;}
+dt,dd{font-weight:inherit;}
 h1,h2,h3,h4,h5,h6{font:inherit;}
 td{font-size:1em;vertical-align:top;}
 img{vertical-align:middle;}
