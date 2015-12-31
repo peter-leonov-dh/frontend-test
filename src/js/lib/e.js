@@ -27,7 +27,7 @@ function E (tag, props) {
     }, [])
     // map strings to text nodes
     .map(function (child) {
-      if (typeof child == 'string')
+      if (typeof child == 'string' || typeof child == 'number')
         return document.createTextNode(child)
       else
         return child
