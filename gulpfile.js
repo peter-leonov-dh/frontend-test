@@ -38,9 +38,13 @@ gulp.task('js', function(){
 });
 
 
-gulp.task('default', function(){
-  gulp.watch(js.watch, ['js']);
-  gulp.watch(css.watch, ['css']);
-
+gulp.task('server', function(){
   gulp.src('public').pipe(webserver());
 });
+
+gulp.task('watch', function(){
+  gulp.watch(js.watch, ['js']);
+  gulp.watch(css.watch, ['css']);
+});
+
+gulp.task('default', ['server', 'watch']);
