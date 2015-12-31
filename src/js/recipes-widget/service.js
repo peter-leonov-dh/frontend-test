@@ -13,7 +13,7 @@ RecipeService.prototype =
     this.onchange(this.recipes)
   },
 
-  incrementRecipeFavoritesCount: function (id)
+  favoriteRecipe: function (id)
   {
     // send AJAX request here
     this.recipes

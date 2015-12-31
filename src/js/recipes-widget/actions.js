@@ -2,10 +2,10 @@
 module.exports = function (recipeService)
 {
   return {
-    favorite: function (id) {
+    favoriteRecipe: function (id) {
       return function ()
       {
-        recipeService.incrementRecipeFavoritesCount(id)
+        recipeService.favoriteRecipe(id)
       }
     }
   }

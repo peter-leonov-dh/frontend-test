@@ -15,7 +15,7 @@ module.exports = function renderRecipeList (recipes, actions)
             recipe.headline
           )
         ),
-        E('a', {className: 'Recipe-favorites', onclick: actions.favorite(recipe.id)},
+        E('a', {className: 'Recipe-favorites', onclick: actions.favoriteRecipe(recipe.id)},
           recipe.favorites + '★'
         ),
         E('ul', {className: 'Recipe-ingredientList'},
