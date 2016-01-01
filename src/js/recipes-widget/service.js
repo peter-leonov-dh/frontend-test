@@ -14,25 +14,33 @@ RecipeService.prototype =
     this.onchange(this.recipes)
   },
 
-  toggleRecipe: function (id)
+  favoriteRecipe: function (id)
   {
-    // do async stuff here
-
-    if (this.favorites[id]) {
-      var isFavorite = false
-      this.favorites[id] = false
-    } else {
-      var isFavorite = true
-      this.favorites[id] = true
-    }
+    this.favorites[id] = true
 
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
       })
       .forEach(function (recipe) {
-        recipe.isFavorite = isFavorite
-        recipe.favorites += isFavorite ? 1 : -1
+        recipe.isFavorite = true
+        recipe.favorites += 1
+      })
+
+    this.onchange(this.recipes)
+  },
+
+  unfavoriteRecipe: function (id)
+  {
+    this.favorites[id] = false
+
+    this.recipes
+      .filter(function (recipe) {
+        return recipe.id == id
+      })
+      .forEach(function (recipe) {
+        recipe.isFavorite = false
+        recipe.favorites += -1
       })
 
     this.onchange(this.recipes)

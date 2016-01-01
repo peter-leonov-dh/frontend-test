@@ -16,9 +16,11 @@ module.exports = function renderRecipeList (recipes, actions)
           )
         ),
         // I wish React would support Slim…
-        E('div', {className: 'Recipe-favorites Favorite', onclick: actions.favoriteRecipe(recipe.id)},
+        E('div', {className: 'Recipe-favorites Favorite'},
           E('span', {className: 'Favorite-count'}, recipe.favorites),
-          E('span', {className: 'Favorite-sign' + (recipe.isFavorite ? ' is-favorite' : '')})
+          recipe.isFavorite
+            ? E('span', {className: 'Favorite-sign is-favorite', onclick: actions.unfavoriteRecipe(recipe.id)})
+            : E('span', {className: 'Favorite-sign',             onclick: actions.favoriteRecipe(recipe.id)})
         ),
         E('ul', {className: 'Recipe-ingredientList'},
           recipe.ingredients.map(function (ingredient)
