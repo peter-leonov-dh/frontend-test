@@ -1,6 +1,5 @@
 function RecipeService ()
 {
-  this.favorites = {}
   this.recipes = []
   // dump EventEmitter replacement
   this.onchange = function () { /*noop*/ }
@@ -16,8 +15,6 @@ RecipeService.prototype =
 
   favoriteRecipe: function (id)
   {
-    this.favorites[id] = true
-
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
@@ -32,8 +29,6 @@ RecipeService.prototype =
 
   unfavoriteRecipe: function (id)
   {
-    this.favorites[id] = false
-
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
