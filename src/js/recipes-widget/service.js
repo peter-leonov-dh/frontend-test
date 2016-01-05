@@ -62,14 +62,20 @@ RecipeService.prototype =
 
     this.emit()
 
-    simulateAJAXFail(this)
+    var service = this
+    someApiCall().catch(function ()
+    {
+      // need to cancel the action and revert our optimistically updated state
+      service.revert()
+      service.emit()
+    })
   },
 
   unfavoriteRecipe: function (id)
   {
     this.commit()
 
-    // if not forbidded to use any external libraries, I would us Ramda here
+    // if not forbidded to use any external libraries, I would use Ramda here
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
@@ -79,25 +85,30 @@ RecipeService.prototype =
         recipe.favorites += -1
       })
 
-    simulateAJAXFail(this)
-
     this.emit()
+
+    var service = this
+    someApiCall().catch(function ()
+    {
+      // need to cancel the action and revert our optimistically updated state
+      service.revert()
+      service.emit()
+    })
   }
 }
 
-function simulateAJAXFail (service)
+function someApiCall ()
 {
-  // Simulate that the backend did not accepted our update event
-  // and we need to cancel the action and revert our optimistically updated state.
-  if (Math.random() >= 0.5)
+  return new Promise(function (resolve, reject)
   {
+    // simulate that the backend did not accept our update event
+    if (Math.random() >= 0.5)
+      return
+
     console.log('simulating backend failure')
-    // set timeout to emulate real world latency
-    window.setTimeout(function () {
-      service.revert()
-      service.emit()
-    }, 250)
-  }
+    // set timeout to mimic real world latency
+    window.setTimeout(reject, 250)
+  })
 }
 
 module.exports = function () { return new RecipeService() }
