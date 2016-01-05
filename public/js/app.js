@@ -92,7 +92,13 @@ module.exports = function (recipeService)
     favoriteRecipe: function (id) {
       return function ()
       {
-        recipeService.toggleRecipe(id)
+        recipeService.favoriteRecipe(id)
+      }
+    },
+    unfavoriteRecipe: function (id) {
+      return function ()
+      {
+        recipeService.unfavoriteRecipe(id)
       }
     }
   }
@@ -101,43 +107,115 @@ module.exports = function (recipeService)
 },{}],7:[function(require,module,exports){
 function RecipeService ()
 {
-  this.favorites = {}
+  // pure JS objects
   this.recipes = []
-  // dump EventEmitter replacement
-  this.onchange = function () { /*noop*/ }
 }
 
 RecipeService.prototype =
 {
-  set: function (recipes)
+  // should be a mixin or a module
+  // with a transaction-like semantics
+  commit: function ()
   {
-    this.recipes = recipes
+    if (!this.commits)
+      this.commits = []
+    // dump data dump
+    this.commits.push(JSON.stringify(this.recipes))
+  },
+  revert: function ()
+  {
+    if (!this.commits)
+      return
+    var commit = this.commits.pop()
+    if (!commit)
+    {
+      console.log('trying to revert to pre-initial commit')
+      return
+    }
+    // dump data dump
+    this.recipes = JSON.parse(commit)
+  },
+
+  // dump EventEmitter replacement
+  onchange: function () { /* noop */ },
+  emit: function ()
+  {
     this.onchange(this.recipes)
   },
 
-  toggleRecipe: function (id)
+  // actual service code
+  setRecipes: function (recipes)
   {
-    // do async stuff here
+    this.commit()
 
-    if (this.favorites[id]) {
-      var isFavorite = false
-      this.favorites[id] = false
-    } else {
-      var isFavorite = true
-      this.favorites[id] = true
-    }
+    this.recipes = recipes
 
+    this.emit()
+  },
+
+  favoriteRecipe: function (id)
+  {
+    this.commit()
+
+    // a very good ground for Ramda
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
       })
       .forEach(function (recipe) {
-        recipe.isFavorite = isFavorite
-        recipe.favorites += isFavorite ? 1 : -1
+        recipe.isFavorite = true
+        recipe.favorites += 1
       })
 
-    this.onchange(this.recipes)
+    this.emit()
+
+    var service = this
+    someApiCall().catch(function ()
+    {
+      // need to cancel the action and revert our optimistically updated state
+      service.revert()
+      service.emit()
+    })
+  },
+
+  unfavoriteRecipe: function (id)
+  {
+    this.commit()
+
+    // if not forbidded to use any external libraries, I would use Ramda here
+    this.recipes
+      .filter(function (recipe) {
+        return recipe.id == id
+      })
+      .forEach(function (recipe) {
+        recipe.isFavorite = false
+        recipe.favorites += -1
+      })
+
+    this.emit()
+
+    var service = this
+    someApiCall().catch(function ()
+    {
+      // need to cancel the action and revert our optimistically updated state
+      service.revert()
+      service.emit()
+    })
   }
+}
+
+function someApiCall ()
+{
+  return new Promise(function (resolve, reject)
+  {
+    // simulate that the backend did not accept our update event
+    if (Math.random() >= 0.5)
+      return
+
+    console.log('simulating backend failure')
+    // set timeout to mimic real world latency
+    window.setTimeout(reject, 250)
+  })
 }
 
 module.exports = function () { return new RecipeService() }
@@ -161,9 +239,11 @@ module.exports = function renderRecipeList (recipes, actions)
           )
         ),
         // I wish React would support Slim…
-        E('div', {className: 'Recipe-favorites Favorite', onclick: actions.favoriteRecipe(recipe.id)},
+        E('div', {className: 'Recipe-favorites Favorite'},
           E('span', {className: 'Favorite-count'}, recipe.favorites),
-          E('span', {className: 'Favorite-sign' + (recipe.isFavorite ? ' is-favorite' : '')})
+          recipe.isFavorite
+            ? E('span', {className: 'Favorite-sign is-favorite', onclick: actions.unfavoriteRecipe(recipe.id)})
+            : E('span', {className: 'Favorite-sign',             onclick: actions.favoriteRecipe(recipe.id)})
         ),
         E('ul', {className: 'Recipe-ingredientList'},
           recipe.ingredients.map(function (ingredient)
@@ -200,7 +280,7 @@ function RecipesWidget (root, fetch)
     return response.json()
   })
   .then(function (recipes) {
-    recipeService.set(recipes)
+    recipeService.setRecipes(recipes)
   })
 }
 
