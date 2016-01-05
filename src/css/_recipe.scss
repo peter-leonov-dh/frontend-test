@@ -1,7 +1,14 @@
+.RecipeList
+{
+  @media (min-width: 600px) {
+    padding: 0 25px;
+  }
+}
+
 .Recipe
 {
   position: relative;
-  margin: 25px;
+  margin: 25px 0;
   background-size: cover;
   min-height: 250px;
   border-radius: 4px;

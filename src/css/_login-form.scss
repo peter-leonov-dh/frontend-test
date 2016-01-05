@@ -5,8 +5,18 @@
   font-size: 20px;
 
   &-element {
+    @media (max-width: 600px) {
+      display: block;
+    }
+
     &.is-error {
       outline: 2px solid red;
+    }
+  }
+
+  button {
+    @media (max-width: 600px) {
+      display: none;
     }
   }
 }
