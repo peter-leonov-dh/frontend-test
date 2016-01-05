@@ -297,7 +297,7 @@ function RecipesWidget(root, fetch) {
   fetch('/db/recipes.json').then(function (response) {
     return response.json();
   }).then(function (recipes) {
-    recipeService.setRecipes(recipes);
+    return recipeService.setRecipes(recipes);
   });
 }
 

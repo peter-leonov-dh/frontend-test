@@ -15,12 +15,8 @@ function RecipesWidget (root, fetch)
   }
 
   fetch('/db/recipes.json')
-  .then(function (response) {
-    return response.json()
-  })
-  .then(function (recipes) {
-    recipeService.setRecipes(recipes)
-  })
+  .then(response => response.json())
+  .then(recipes => recipeService.setRecipes(recipes))
 }
 
 module.exports = RecipesWidget
