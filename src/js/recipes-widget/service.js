@@ -1,21 +1,21 @@
-function RecipeService ()
+class RecipeService
 {
-  // pure JS objects
-  this.recipes = []
-}
+  constructor ()
+  {
+    // pure JS objects
+    this.recipes = []
+  }
 
-RecipeService.prototype =
-{
   // should be a mixin or a module
   // with a transaction-like semantics
-  commit: function ()
+  commit ()
   {
     if (!this.commits)
       this.commits = []
     // dump data dump
     this.commits.push(JSON.stringify(this.recipes))
-  },
-  revert: function ()
+  }
+  revert ()
   {
     if (!this.commits)
       return
@@ -27,26 +27,26 @@ RecipeService.prototype =
     }
     // dump data dump
     this.recipes = JSON.parse(commit)
-  },
+  }
 
   // dump EventEmitter replacement
-  onchange: function () { /* noop */ },
-  emit: function ()
+  onchange () { /* noop */ }
+  emit ()
   {
     this.onchange(this.recipes)
-  },
+  }
 
   // actual service code
-  setRecipes: function (recipes)
+  setRecipes (recipes)
   {
     this.commit()
 
     this.recipes = recipes
 
     this.emit()
-  },
+  }
 
-  favoriteRecipe: function (id)
+  favoriteRecipe (id)
   {
     this.commit()
 
@@ -68,9 +68,9 @@ RecipeService.prototype =
       this.revert()
       this.emit()
     })
-  },
+  }
 
-  unfavoriteRecipe: function (id)
+  unfavoriteRecipe (id)
   {
     this.commit()
 
@@ -109,4 +109,5 @@ function someApiCall ()
   })
 }
 
+// export a factory
 module.exports = function () { return new RecipeService() }
