@@ -62,12 +62,11 @@ RecipeService.prototype =
 
     this.emit()
 
-    var service = this
-    someApiCall().catch(function ()
+    someApiCall().catch(() =>
     {
       // need to cancel the action and revert our optimistically updated state
-      service.revert()
-      service.emit()
+      this.revert()
+      this.emit()
     })
   },
 
@@ -87,12 +86,11 @@ RecipeService.prototype =
 
     this.emit()
 
-    var service = this
-    someApiCall().catch(function ()
+    someApiCall().catch(() =>
     {
       // need to cancel the action and revert our optimistically updated state
-      service.revert()
-      service.emit()
+      this.revert()
+      this.emit()
     })
   }
 }
