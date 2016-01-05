@@ -50,6 +50,7 @@ RecipeService.prototype =
   {
     this.commit()
 
+    // a very good ground for Ramda
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
@@ -60,12 +61,15 @@ RecipeService.prototype =
       })
 
     this.emit()
+
+    simulateAJAXFail(this)
   },
 
   unfavoriteRecipe: function (id)
   {
     this.commit()
 
+    // if not forbidded to use any external libraries, I would us Ramda here
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
@@ -75,7 +79,24 @@ RecipeService.prototype =
         recipe.favorites += -1
       })
 
+    simulateAJAXFail(this)
+
     this.emit()
+  }
+}
+
+function simulateAJAXFail (service)
+{
+  // Simulate that the backend did not accepted our update event
+  // and we need to cancel the action and revert our optimistically updated state.
+  if (Math.random() >= 0.5)
+  {
+    console.log('simulating backend failure')
+    // set timeout to emulate real world latency
+    window.setTimeout(function () {
+      service.revert()
+      service.emit()
+    }, 250)
   }
 }
 
