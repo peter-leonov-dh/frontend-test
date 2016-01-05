@@ -6,6 +6,7 @@ var sass = require('gulp-sass');
 var browserify = require('browserify');
 var webserver = require('gulp-webserver');
 var source = require('vinyl-source-stream');
+var babel = require('babelify');
 
 
 var css = {
@@ -32,6 +33,7 @@ gulp.task('js', function(){
   browserify({
     entries: js.in
   })
+  .transform(babel)
   .bundle()
   .pipe(source(js.out))
   .pipe(gulp.dest(js.dst));
