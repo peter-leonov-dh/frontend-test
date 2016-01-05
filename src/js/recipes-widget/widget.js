@@ -19,7 +19,7 @@ function RecipesWidget (root, fetch)
     return response.json()
   })
   .then(function (recipes) {
-    recipeService.set(recipes)
+    recipeService.setRecipes(recipes)
   })
 }
 

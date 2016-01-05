@@ -1,20 +1,55 @@
 function RecipeService ()
 {
+  // pure JS objects
   this.recipes = []
-  // dump EventEmitter replacement
-  this.onchange = function () { /*noop*/ }
 }
 
 RecipeService.prototype =
 {
-  set: function (recipes)
+  // should be a mixin or a module
+  // with a transaction-like semantics
+  commit: function ()
   {
-    this.recipes = recipes
+    if (!this.commits)
+      this.commits = []
+    // dump data dump
+    this.commits.push(JSON.stringify(this.recipes))
+  },
+  revert: function ()
+  {
+    if (!this.commits)
+      return
+    var commit = this.commits.pop()
+    if (!commit)
+    {
+      console.log('trying to revert to pre-initial commit')
+      return
+    }
+    // dump data dump
+    this.recipes = JSON.parse(commit)
+  },
+
+  // dump EventEmitter replacement
+  onchange: function () { /* noop */ },
+  emit: function ()
+  {
     this.onchange(this.recipes)
+  },
+
+  // actual service code
+  setRecipes: function (recipes)
+  {
+    this.commit()
+
+    this.recipes = recipes
+
+    this.emit()
   },
 
   favoriteRecipe: function (id)
   {
+    this.commit()
+
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
@@ -24,11 +59,13 @@ RecipeService.prototype =
         recipe.favorites += 1
       })
 
-    this.onchange(this.recipes)
+    this.emit()
   },
 
   unfavoriteRecipe: function (id)
   {
+    this.commit()
+
     this.recipes
       .filter(function (recipe) {
         return recipe.id == id
@@ -38,7 +75,7 @@ RecipeService.prototype =
         recipe.favorites += -1
       })
 
-    this.onchange(this.recipes)
+    this.emit()
   }
 }
 
