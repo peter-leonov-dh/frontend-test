@@ -60,12 +60,22 @@ html {
   margin: 20px 25px;
   text-align: right;
   font-size: 20px; }
+  @media (max-width: 600px) {
+    .LoginForm-element {
+      display: block; } }
   .LoginForm-element.is-error {
     outline: 2px solid red; }
+  @media (max-width: 600px) {
+    .LoginForm button {
+      display: none; } }
+
+@media (min-width: 600px) {
+  .RecipeList {
+    padding: 0 25px; } }
 
 .Recipe {
   position: relative;
-  margin: 25px;
+  margin: 25px 0;
   background-size: cover;
   min-height: 250px;
   border-radius: 4px; }
