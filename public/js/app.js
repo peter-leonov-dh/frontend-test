@@ -1,4 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
 // jQuery, best parts
 var $ = require('./lib/query');
 var fetch = require('./lib/fetch');
@@ -8,6 +10,8 @@ var recipesWidget = require('./recipes-widget/widget')($('#app'), fetch);
 var loginFormWidget = require('./login-form-widget/widget')($('#login'));
 
 },{"./lib/fetch":3,"./lib/query":4,"./login-form-widget/widget":5,"./recipes-widget/widget":9}],2:[function(require,module,exports){
+'use strict';
+
 // React.js, best parts ;)
 function E(tag, props) {
   var node = document.createElement(tag);
@@ -15,12 +19,14 @@ function E(tag, props) {
   var style = props.style;
   if (style) {
     delete props.style;
-    for (var k in style) node.style[k] = style[k];
+    for (var k in style) {
+      node.style[k] = style[k];
+    }
   }
 
-  for (var k in props) node[k] = props[k];
-
-  Array.from(arguments)
+  for (var k in props) {
+    node[k] = props[k];
+  }Array.from(arguments)
   // shift for positioned args tag and props
   .slice(2)
   // flatten (node1, [node2, node3, …], …nodeN) -> node1, node2, node3, … nodeN
@@ -43,16 +49,22 @@ function E(tag, props) {
 module.exports = E;
 
 },{}],3:[function(require,module,exports){
+"use strict";
+
 // XMLHTTPRequest, the best part
 module.exports = window.fetch;
 
 },{}],4:[function(require,module,exports){
+"use strict";
+
 // jQuery, best parts
 module.exports = function $(s) {
   return document.querySelector(s);
 };
 
 },{}],5:[function(require,module,exports){
+'use strict';
+
 function LoginFormWidget(root) {
   function check(e) {
     e.preventDefault();
@@ -70,15 +82,17 @@ function LoginFormWidget(root) {
 module.exports = LoginFormWidget;
 
 },{}],6:[function(require,module,exports){
+"use strict";
+
 // needs DSL like in ReFLUX
 module.exports = function (recipeService) {
   return {
-    favoriteRecipe: function (id) {
+    favoriteRecipe: function favoriteRecipe(id) {
       return function () {
         recipeService.favoriteRecipe(id);
       };
     },
-    unfavoriteRecipe: function (id) {
+    unfavoriteRecipe: function unfavoriteRecipe(id) {
       return function () {
         recipeService.unfavoriteRecipe(id);
       };
@@ -87,89 +101,115 @@ module.exports = function (recipeService) {
 };
 
 },{}],7:[function(require,module,exports){
-function RecipeService() {
-  // pure JS objects
-  this.recipes = [];
-}
+'use strict';
 
-RecipeService.prototype = {
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RecipeService = (function () {
+  function RecipeService() {
+    _classCallCheck(this, RecipeService);
+
+    // pure JS objects
+    this.recipes = [];
+  }
+
   // should be a mixin or a module
   // with a transaction-like semantics
-  commit: function () {
-    if (!this.commits) this.commits = [];
-    // dump data dump
-    this.commits.push(JSON.stringify(this.recipes));
-  },
-  revert: function () {
-    if (!this.commits) return;
-    var commit = this.commits.pop();
-    if (!commit) {
-      console.log('trying to revert to pre-initial commit');
-      return;
+
+  _createClass(RecipeService, [{
+    key: 'commit',
+    value: function commit() {
+      if (!this.commits) this.commits = [];
+      // dump data dump
+      this.commits.push(JSON.stringify(this.recipes));
     }
-    // dump data dump
-    this.recipes = JSON.parse(commit);
-  },
+  }, {
+    key: 'revert',
+    value: function revert() {
+      if (!this.commits) return;
+      var commit = this.commits.pop();
+      if (!commit) {
+        console.log('trying to revert to pre-initial commit');
+        return;
+      }
+      // dump data dump
+      this.recipes = JSON.parse(commit);
+    }
 
-  // dump EventEmitter replacement
-  onchange: function () {/* noop */},
-  emit: function () {
-    this.onchange(this.recipes);
-  },
+    // dump EventEmitter replacement
 
-  // actual service code
-  setRecipes: function (recipes) {
-    this.commit();
+  }, {
+    key: 'onchange',
+    value: function onchange() {/* noop */}
+  }, {
+    key: 'emit',
+    value: function emit() {
+      this.onchange(this.recipes);
+    }
 
-    this.recipes = recipes;
+    // actual service code
 
-    this.emit();
-  },
+  }, {
+    key: 'setRecipes',
+    value: function setRecipes(recipes) {
+      this.commit();
 
-  favoriteRecipe: function (id) {
-    var _this = this;
+      this.recipes = recipes;
 
-    this.commit();
+      this.emit();
+    }
+  }, {
+    key: 'favoriteRecipe',
+    value: function favoriteRecipe(id) {
+      var _this = this;
 
-    // a very good ground for Ramda
-    this.recipes.filter(function (recipe) {
-      return recipe.id == id;
-    }).forEach(function (recipe) {
-      recipe.isFavorite = true;
-      recipe.favorites += 1;
-    });
+      this.commit();
 
-    this.emit();
+      // a very good ground for Ramda
+      this.recipes.filter(function (recipe) {
+        return recipe.id == id;
+      }).forEach(function (recipe) {
+        recipe.isFavorite = true;
+        recipe.favorites += 1;
+      });
 
-    someApiCall().catch(function () {
-      // need to cancel the action and revert our optimistically updated state
-      _this.revert();
-      _this.emit();
-    });
-  },
+      this.emit();
 
-  unfavoriteRecipe: function (id) {
-    var _this2 = this;
+      someApiCall().catch(function () {
+        // need to cancel the action and revert our optimistically updated state
+        _this.revert();
+        _this.emit();
+      });
+    }
+  }, {
+    key: 'unfavoriteRecipe',
+    value: function unfavoriteRecipe(id) {
+      var _this2 = this;
 
-    this.commit();
+      this.commit();
 
-    // if not forbidded to use any external libraries, I would use Ramda here
-    this.recipes.filter(function (recipe) {
-      return recipe.id == id;
-    }).forEach(function (recipe) {
-      recipe.isFavorite = false;
-      recipe.favorites += -1;
-    });
+      // if not forbidded to use any external libraries, I would use Ramda here
+      this.recipes.filter(function (recipe) {
+        return recipe.id == id;
+      }).forEach(function (recipe) {
+        recipe.isFavorite = false;
+        recipe.favorites += -1;
+      });
 
-    this.emit();
+      this.emit();
 
-    someApiCall().catch(function () {
-      // need to cancel the action and revert our optimistically updated state
-      _this2.revert();
-      _this2.emit();
-    });
-  }
-};
+      someApiCall().catch(function () {
+        // need to cancel the action and revert our optimistically updated state
+        _this2.revert();
+        _this2.emit();
+      });
+    }
+  }]);
+
+  return RecipeService;
+})();
 
 function someApiCall() {
   return new Promise(function (resolve, reject) {
@@ -182,60 +222,52 @@ function someApiCall() {
   });
 }
 
+// export a factory
 module.exports = function () {
   return new RecipeService();
 };
 
 },{}],8:[function(require,module,exports){
-var E = require('../lib/e');
+"use strict";
 
-module.exports = function renderRecipeList(recipes, actions) {
-  // pretending React is not yet invented ;)
-  return E('ul', { className: 'RecipeList' }, recipes.map(function (recipe) {
-    return E('li', { className: 'Recipe', style: { backgroundImage: 'url(' + recipe.image + ')' } }, E('h2', { className: 'Recipe-title' }, E('span', { className: 'Recipe-name' }, recipe.name), E('span', { className: 'Recipe-headline' }, recipe.headline)),
-    // I wish React would support Slim…
-    E('div', { className: 'Recipe-favorites Favorite' }, E('span', { className: 'Favorite-count' }, recipe.favorites), recipe.isFavorite ? E('span', { className: 'Favorite-sign is-favorite', onclick: actions.unfavoriteRecipe(recipe.id) }) : E('span', { className: 'Favorite-sign', onclick: actions.favoriteRecipe(recipe.id) })), E('ul', { className: 'Recipe-ingredientList' }, recipe.ingredients.map(function (ingredient) {
-      return E('li', { className: 'Recipe-ingredient' }, ingredient);
-    })));
-  }));
-};
+var E = require('../lib/e');
 
 module.exports = function renderRecipeList(recipes, actions) {
   // I wish React would support Slim…
   return E(
-    'ul',
-    { className: 'RecipeList' },
+    "ul",
+    { className: "RecipeList" },
     recipes.map(function (recipe) {
       return E(
-        'li',
-        { className: 'Recipe', style: { backgroundImage: 'url(' + recipe.image + ')' } },
+        "li",
+        { className: "Recipe", style: { backgroundImage: 'url(' + recipe.image + ')' } },
         E(
-          'h2',
-          { className: 'Recipe-title' },
+          "h2",
+          { className: "Recipe-title" },
           E(
-            'span',
-            { className: 'Recipe-name' },
+            "span",
+            { className: "Recipe-name" },
             recipe.name
           ),
           E(
-            'span',
-            { className: 'Recipe-headline' },
+            "span",
+            { className: "Recipe-headline" },
             recipe.headline
           )
         ),
         E(
-          'div',
-          { className: 'Recipe-favorites Favorite' },
+          "div",
+          { className: "Recipe-favorites Favorite" },
           E(
-            'span',
-            { className: 'Favorite-count' },
+            "span",
+            { className: "Favorite-count" },
             recipe.favorites
           ),
-          recipe.isFavorite ? E('i', { className: 'Favorite-sign is-favorite', onclick: actions.unfavoriteRecipe(recipe.id) }) : E('i', { className: 'Favorite-sign', onclick: actions.favoriteRecipe(recipe.id) })
+          recipe.isFavorite ? E("i", { className: "Favorite-sign is-favorite", onclick: actions.unfavoriteRecipe(recipe.id) }) : E("i", { className: "Favorite-sign", onclick: actions.favoriteRecipe(recipe.id) })
         ),
         E(
-          'ul',
-          { className: 'Recipe-ingredientList' },
+          "ul",
+          { className: "Recipe-ingredientList" },
           recipe.ingredients.map(function (ingredient) {
             return E('li', { className: 'Recipe-ingredient' }, ingredient);
           })
@@ -246,6 +278,8 @@ module.exports = function renderRecipeList(recipes, actions) {
 };
 
 },{"../lib/e":2}],9:[function(require,module,exports){
+'use strict';
+
 function RecipesWidget(root, fetch) {
   // kinda Model
   var recipeService = require('./service')();
