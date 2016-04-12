@@ -1,6 +1,17 @@
 HelloFresh Dev Team - Frontend Developer Test
 =======================================================
 
+How to run
+----------
+
+    brew install npm
+    npm install
+
+    alias gulp=./node_modules/gulp/bin/gulp.js
+    gulp
+
+
+
 The goal of this test is to assert your coding skills (to some degree).
 Feel more than free to add any particular technique or algorithm at any point, which you think might enrich the overall quality of the end result. We expect you to be able to solve this test in a 2-4 hour time span.
 

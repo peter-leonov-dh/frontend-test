@@ -1,0 +1,123 @@
+@charset "UTF-8";
+body, table,
+h1, h2, h3, h4,
+p, form,
+fieldset, legend,
+ol, ul, li, dl, dt, dd {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  list-style: none; }
+
+dt, dd {
+  font-weight: inherit; }
+
+h1, h2, h3, h4, h5, h6 {
+  font: inherit; }
+
+td {
+  font-size: 1em;
+  vertical-align: top; }
+
+img {
+  vertical-align: middle; }
+
+a {
+  cursor: pointer;
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: underline; }
+
+a img {
+  border: 0; }
+
+input, select, textarea, button {
+  font: inherit; }
+
+input[type="password"],
+input[type="text"] {
+  margin: 0; }
+
+ul {
+  list-style-type: none; }
+
+table {
+  border: 0;
+  border-collapse: collapse; }
+
+table td {
+  padding: 0; }
+
+html {
+  font: 10px Tahoma,Arial,sans-serif; }
+
+.Layout-content {
+  max-width: 960px;
+  margin: 0 auto; }
+
+.LoginForm {
+  margin: 20px 25px;
+  text-align: right;
+  font-size: 20px; }
+  @media (max-width: 600px) {
+    .LoginForm-element {
+      display: block; } }
+  .LoginForm-element.is-error {
+    outline: 2px solid red; }
+  @media (max-width: 600px) {
+    .LoginForm button {
+      display: none; } }
+
+@media (min-width: 600px) {
+  .RecipeList {
+    padding: 0 25px; } }
+
+.Recipe {
+  position: relative;
+  margin: 25px 0;
+  background-size: cover;
+  min-height: 250px;
+  border-radius: 4px; }
+  .Recipe-title {
+    color: #fff;
+    padding: 15px 20px;
+    margin-right: 100px;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.75), 0 0 2px rgba(0, 0, 0, 0.5); }
+  .Recipe-name {
+    font-size: 40px;
+    letter-spacing: 0.75px; }
+  .Recipe-headline {
+    display: block;
+    font-size: 19px; }
+  .Recipe-favorites {
+    position: absolute;
+    right: 15px;
+    top: 20px; }
+  .Recipe-ingredientList {
+    padding: 15px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.5em;
+    color: #222;
+    letter-spacing: 0.5px;
+    text-shadow: -1px -1px 0   #fff, -1px  1px 1px #fff, 1px -1px 1px #fff, 1px  1px 0   #fff; }
+  .Recipe-ingredient:before {
+    content: '• '; }
+
+.Favorite-sign:after {
+  content: '★'; }
+
+.Favorite {
+  font-size: 40px; }
+  .Favorite-count {
+    margin-right: 5px;
+    vertical-align: middle;
+    color: #ff0; }
+  .Favorite-sign {
+    font-size: 32px;
+    vertical-align: middle;
+    color: #fff;
+    cursor: pointer; }
+    .Favorite-sign.is-favorite {
+      color: #ff0; }
